@@ -1,0 +1,296 @@
+{{ 'section-contact-form.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+<div class="color-{{ section.settings.color_scheme }} gradient">
+  <div class="contact page-width page-width--narrow section-{{ section.id }}-padding">
+    <div class="heading-container">
+      {%- if section.settings.heading != blank -%}
+        <h2 class="title title-wrapper--no-top-margin inline-richtext {{ section.settings.heading_size }}{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+          {{ section.settings.heading }}
+        </h2>
+      {%- else -%}
+        <h2 class="visually-hidden">{{ 'templates.contact.form.title' | t }}</h2>
+      {%- endif -%}
+      <div class="text-container{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+        {% if section.settings.description %}
+          {{ section.settings.description }}
+        {% endif %}
+        {% if section.settings.email %}
+          <span class="email">
+            Email: <a style="text-decoration: none; color: rgba(var(--color-foreground)) !important;">{{ section.settings.email }}</a>
+          </span>
+        {% endif %}
+      </div>
+    </div>
+    {%- liquid
+      assign contact_form_class = 'isolate'
+      if settings.animations_reveal_on_scroll
+        assign contact_form_class = 'isolate scroll-trigger animate--slide-in'
+      endif
+    -%}
+    {%- form 'contact', id: 'ContactForm', class: contact_form_class -%}
+      <div class="contact__fields">
+        <div class="form-field">
+          <span>Full Name</span>
+          <div class="field">
+            <input
+              class="field__input"
+              autocomplete="name"
+              type="text"
+              id="ContactForm-name"
+              name="contact[{{ 'templates.contact.form.name' | t }}]"
+              value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}"
+              placeholder="Full Name"
+              required
+            >
+          </div>
+        </div>
+        <div class="form-field">
+          <span>Busines Name</span>
+          <div class="field">
+            <input
+              class="field__input"
+              type="text"
+              id="ContactForm-BusinessName"
+              name="contact[Business Name]"
+              placeholder="Business Name"
+              required
+            >
+          </div>
+        </div>
+        <div class="form-field">
+          <span>Email</span>
+          <div class="field field--with-error">
+            <input
+              autocomplete="email"
+              type="email"
+              id="ContactForm-email"
+              class="field__input"
+              name="contact[email]"
+              spellcheck="false"
+              autocapitalize="off"
+              value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}"
+              aria-required="true"
+              {% if form.errors contains 'email' %}
+                aria-invalid="true"
+                aria-describedby="ContactForm-email-error"
+              {% endif %}
+              placeholder="Email"
+              required
+            >
+            {%- if form.errors contains 'email' -%}
+              <small class="contact__field-error" id="ContactForm-email-error">
+                <span class="visually-hidden">{{ 'accessibility.error' | t }}</span>
+                <span class="form__message">
+                  {%- render 'icon-error' -%}
+                  {{- form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email -}}
+                </span>
+              </small>
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span>Budget</span>
+        <div class="field select-field">
+          <span class="accordion">
+            <span class="title-container">
+              <span class="selected-budget"></span>
+              <span class="small-hide">Select Range</span>
+              <span class="medium-hide large-up-hide">Budget</span>
+            </span>
+            <span>
+              <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg"> <path d="M9.80795 11.7695L1.09346 1.31215C0.659239 0.791085 1.02976 -9.08662e-07 1.70803 -8.79014e-07L18.292 -1.54107e-07C18.9702 -1.24459e-07 19.3408 0.791085 18.9065 1.31215L10.1921 11.7695C10.0921 11.8895 9.90789 11.8895 9.80795 11.7695Z" fill="#7E4220"/> </svg>
+            </span>
+          </span>
+          <div class="panel">
+            <div class="radio-buttons">
+              <input type="radio" name="contact[budget]" value="$1,000 - $5,000" id="$1,000 - $5,000"><label for="$1,000 - $5,000">$1,000 - $5,000</label>
+              <input type="radio" name="contact[budget]" value="$5,000 - $10,000" id="$5,000 - $10,000"><label for="$5,000 - $10,000">$5,000 - $10,000</label>
+              <input type="radio" name="contact[budget]" value="$10,000 - $15,000" id="$10,000 - $15,000"><label for="$10,000 - $15,000">$10,000 - $15,000</label>
+              <input type="radio" name="contact[budget]" value="Over $15,000" id="Over $15,000"><label for="Over $15,000">Over $15,000</label>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-field">
+        <span>Message</span>
+        <div class="field" id="textarea-field">
+          <textarea
+            rows="4"
+            id="ContactForm-body"
+            class="text-area field__input container__textarea"
+            name="contact[{{ 'templates.contact.form.comment' | t }}]"
+            placeholder="Message"
+            required
+          >
+            {{- form.body -}}
+          </textarea>
+          <span class="required-fields">
+            *All fields required
+          </span>
+        </div>
+      </div>
+      <div class="contact__button">
+        <div class="success-msg">
+          {%- if form.posted_successfully? -%}
+            <h2 class="form-status form-status-list form__message" tabindex="-1" autofocus>
+              {% render 'icon-success' %}
+              {{ 'templates.contact.form.post_success' | t }}
+            </h2>
+          {%- elsif form.errors -%}
+            <div class="form__message">
+              <h2 class="form-status caption-large text-body" role="alert" tabindex="-1" autofocus>
+                {% render 'icon-error' %}
+                {{ 'templates.contact.form.error_heading' | t }}
+              </h2>
+            </div>
+            <ul class="form-status-list caption-large" role="list">
+              <li>
+                <a href="#ContactForm-email" class="link">
+                  {{ form.errors.translated_fields.email | capitalize }}
+                  {{ form.errors.messages.email }}
+                </a>
+              </li>
+            </ul>
+          {%- endif -%}
+        </div>
+        <button type="submit" class="button">
+          {{ 'templates.contact.form.send' | t }}
+        </button>
+      </div>
+    {%- endform -%}
+  </div>
+</div>
+
+<script>
+  let radioValue = '';
+  let contactRadios = document.querySelectorAll('.contact .radio-buttons input');
+  let selectionContainer = document.querySelector('.field .accordion .selected-budget');
+  contactRadios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      selectionContainer.innerHTML = radio.value;
+      selectionContainer.parentElement.parentElement.classList.remove("active");
+      radio.parentElement.parentElement.style.maxHeight = null;
+      selectionContainer.style.display = "block";
+    })
+  });
+  
+  var acc = document.getElementsByClassName("accordion");
+  var i;
+  for (i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function() {
+      this.classList.toggle("active");
+      var panel = this.nextElementSibling;
+      if (panel.style.maxHeight) {
+        panel.style.maxHeight = null;
+      } else {
+        panel.style.maxHeight = panel.scrollHeight + "px";
+      }
+
+      if (this.classList.contains('active')) {
+        selectionContainer.style.display = "none";
+      } else {
+        selectionContainer.style.display = "block";
+      }
+    });
+  }
+</script>
+
+{% schema %}
+{
+  "name": "t:sections.contact-form.name",
+  "tag": "section",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "inline_richtext",
+      "id": "heading",
+      "default": "Contact form",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "t:sections.all.heading_size.options__1.label"
+        },
+        {
+          "value": "h1",
+          "label": "t:sections.all.heading_size.options__2.label"
+        },
+        {
+          "value": "h0",
+          "label": "t:sections.all.heading_size.options__3.label"
+        }
+      ],
+      "default": "h1",
+      "label": "t:sections.all.heading_size.label"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description"
+    },
+    {
+      "type": "text",
+      "id": "email",
+      "label": "Contact email"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.contact-form.presets.name"
+    }
+  ]
+}
+{% endschema %}

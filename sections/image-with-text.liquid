@@ -1,0 +1,475 @@
+{{ 'component-image-with-text.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+  .section-{{ section.id }}-padding {
+    padding-top: {{ section.settings.padding_top | times: 0.75 | round: 0 }}px;
+    padding-bottom: {{ section.settings.padding_bottom | times: 0.75 | round: 0 }}px;
+  }
+
+  @media screen and (min-width: 750px) {
+    .section-{{ section.id }}-padding {
+      padding-top: {{ section.settings.padding_top }}px;
+      padding-bottom: {{ section.settings.padding_bottom }}px;
+    }
+  }
+{%- endstyle -%}
+
+{% assign scheme1 = settings.color_schemes | first %}
+
+<div class="gradient color-{{ section.settings.color_scheme }}">
+  <div class="{{ section.settings.class }} image-with-text image-with-text--{{ section.settings.content_layout }} page-width isolate{% if settings.text_boxes_border_thickness > 0 and settings.text_boxes_border_opacity > 0 and settings.media_border_thickness > 0 and settings.media_border_opacity > 0 %} collapse-borders{% endif %}{% unless section.settings.color_scheme == scheme1 and settings.media_border_thickness > 0 and settings.text_boxes_shadow_opacity == 0 and settings.text_boxes_border_thickness == 0 or settings.text_boxes_border_opacity == 0 %} collapse-corners{% endunless %} section-{{ section.id }}-padding{% if settings.animations_reveal_on_scroll %} scroll-trigger animate--slide-in{% endif %}">
+    <div class="image-with-text__grid grid grid--gapless grid--1-col grid--{% if section.settings.desktop_image_width == 'medium' %}2-col-tablet{% else %}3-col-tablet{% endif %}{% if section.settings.layout == 'text_first' %} image-with-text__grid--reverse{% endif %}">
+      <div class="image-with-text__media-item image-with-text__media-item--{{ section.settings.desktop_image_width }} image-with-text__media-item--{{ section.settings.desktop_content_position }} grid__item">
+        <div
+          class="image-with-text__media image-with-text__media--{{ section.settings.height }} global-media-settings {% if section.settings.image != blank %}media{% else %}image-with-text__media--placeholder placeholder{% endif %}{% if section.settings.image_behavior != 'none' %} animate--{{ section.settings.image_behavior }}{% endif %}"
+          {% if section.settings.height == 'adapt' and section.settings.image != blank %}
+            style="padding-bottom: {{ 1 | divided_by: section.settings.image.aspect_ratio | times: 100 }}%;"
+          {% endif %}
+        >
+          {%- if section.settings.image != blank -%}
+            {%- if section.settings.image_behavior == 'ambient' or section.settings.image_behavior == 'zoom-in' -%}
+              {%- assign widths = '198, 432, 642, 900, 1284, 1800' -%}
+              {%- capture sizes -%}
+                (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 1.6667 }}px,
+                (min-width: 750px) calc((100vw - 130px) / 1.667), calc((100vw - 50px) / 1.667)
+              {%- endcapture -%}
+            {%- else -%}
+              {%- assign widths = '165, 360, 535, 750, 1070, 1500' -%}
+              {%- capture sizes -%}
+                (min-width: {{ settings.page_width }}px) {{ settings.page_width | minus: 100 | divided_by: 2 }}px,
+                (min-width: 750px) calc((100vw - 130px) / 2), calc((100vw - 50px) / 2)
+              {%- endcapture -%}
+            {%- endif -%}
+            {{
+              section.settings.image
+              | image_url: width: 1500
+              | image_tag: loading: 'lazy', sizes: sizes, widths: widths
+            }}
+          {%- else -%}
+            {{ 'detailed-apparel-1' | placeholder_svg_tag: 'placeholder-svg' }}
+          {%- endif -%}
+        </div>
+        {% if section.settings.class == "home-about" %}
+          <div class="svg-container">
+            <svg width="164" height="164" viewBox="0 0 164 164" fill="none" xmlns="http://www.w3.org/2000/svg"> <g clip-path="url(#clip0_1_490)"> <path d="M82.0292 164C127.317 164 164.029 127.287 164.029 82C164.029 36.7127 127.317 0 82.0292 0C36.7418 0 0.0291748 36.7127 0.0291748 82C0.0291748 127.287 36.7418 164 82.0292 164Z" fill="#FFCBDD"/> <path d="M33.5362 69.9724C32.9239 70.3934 32.1577 70.5501 31.2374 70.4426L31.1436 72.8597C32.4683 73.0119 33.6446 72.7367 34.6696 72.0315C35.6964 71.3263 36.4207 70.2421 36.8444 68.7798C37.1141 67.8486 37.1679 66.9749 37.0093 66.1567C36.8499 65.3394 36.5146 64.6406 36.0053 64.0602C35.496 63.4808 34.8354 63.0735 34.0236 62.8384C33.292 62.6271 32.6251 62.6034 32.0219 62.7674C31.4197 62.9323 30.8475 63.253 30.3063 63.7304C29.7642 64.2087 29.2129 64.8192 28.6499 65.5645C28.2089 66.143 27.8208 66.6113 27.4864 66.9685C27.1529 67.3266 26.8267 67.5671 26.5097 67.691C26.1935 67.8149 25.861 67.8277 25.5157 67.7274C25.1831 67.6309 24.9143 67.4641 24.7102 67.2236C24.5061 66.984 24.3759 66.6988 24.3212 66.3653C24.2656 66.0328 24.2902 65.6866 24.395 65.3267C24.5408 64.821 24.8086 64.4092 25.1968 64.0885C25.5849 63.7687 26.0723 63.5418 26.6582 63.4088L26.0723 61.2495C25.1111 61.4326 24.3221 61.8171 23.7062 62.4029C23.0894 62.9888 22.6484 63.7404 22.3833 64.6579C22.1363 65.5089 22.0789 66.307 22.2092 67.0505C22.3395 67.7958 22.6356 68.4281 23.0967 68.952C23.5586 69.475 24.1545 69.8421 24.8861 70.0535C25.5913 70.2576 26.2445 70.2804 26.845 70.1228C27.4454 69.9651 28.0176 69.6481 28.5588 69.1707C29.1009 68.6932 29.6521 68.0819 30.2152 67.3366C30.6315 66.7945 31.0115 66.3416 31.3531 65.9799C31.6966 65.6182 32.0365 65.3631 32.3745 65.2155C32.7125 65.0688 33.0879 65.0552 33.4997 65.1745C33.886 65.2857 34.2013 65.4898 34.4482 65.7841C34.6942 66.0793 34.8482 66.43 34.911 66.8373C34.9739 67.2446 34.9393 67.6746 34.8081 68.1265C34.5739 68.9383 34.1503 69.5542 33.538 69.9752L33.5362 69.9724Z" fill="#7E4220"/> <path d="M41.0374 58.1535L35.8112 54.5719L39.4985 49.1927L44.7246 52.7743L46.0868 50.7872L34.1448 42.6008L32.7827 44.5889L37.6654 47.9363L33.9781 53.3155L29.0954 49.9681L27.7324 51.9552L39.6744 60.1415L41.0374 58.1535Z" fill="#7E4220"/> <path d="M42.3732 34.7137L40.5511 36.291L50.0264 47.2372L51.8484 45.66L42.3732 34.7137Z" fill="#7E4220"/> <path d="M58.0906 41.2077L55.3017 35.5206L61.1574 32.6487L63.9472 38.3377L66.1102 37.2763L59.737 24.2766L57.5731 25.338L60.1798 30.6534L54.3231 33.5243L51.7174 28.2089L49.5535 29.2703L55.9276 42.2692L58.0906 41.2077Z" fill="#7E4220"/> <path d="M81.6027 23.4912C80.9158 22.4279 80.0274 21.638 78.9368 21.1241C77.8471 20.6093 76.6135 20.4235 75.235 20.5656C73.8847 20.705 72.7331 21.1378 71.7773 21.8621C70.8216 22.5873 70.1164 23.544 69.6608 24.7321C69.2052 25.9211 69.0558 27.2659 69.2107 28.7674C69.3638 30.2553 69.7856 31.5345 70.4735 32.605C71.1614 33.6756 72.047 34.4682 73.1312 34.9821C74.2136 35.4969 75.4309 35.6846 76.7811 35.5452C78.1441 35.4049 79.3076 34.9712 80.2698 34.2459C81.231 33.5198 81.9444 32.5667 82.4072 31.3841C82.8701 30.2015 83.0241 28.8603 82.8692 27.3579C82.7134 25.8427 82.2906 24.5535 81.6036 23.4903L81.6027 23.4912ZM80.2087 30.4211C79.9236 31.2374 79.4726 31.8925 78.8557 32.3882C78.238 32.8829 77.4681 33.1781 76.5461 33.2738C75.6504 33.3667 74.8468 33.2373 74.1353 32.8856C73.4237 32.5339 72.8497 31.9882 72.4114 31.2465C71.9723 30.5058 71.698 29.5974 71.5869 28.5223C71.4748 27.4345 71.5614 26.4823 71.8456 25.666C72.1308 24.8505 72.5827 24.1982 73.1995 23.7098C73.8173 23.2215 74.5744 22.9308 75.4691 22.8388C76.3921 22.7431 77.2066 22.8753 77.9118 23.2342C78.617 23.5932 79.1919 24.1426 79.6375 24.8833C80.083 25.6241 80.3609 26.5325 80.4711 27.6067C80.5805 28.6672 80.493 29.6056 80.2078 30.4211H80.2087Z" fill="#7E4220"/> <path d="M99.384 35.1015L104.681 37.4631L104.459 40.6838L106.85 41.7489L107.527 26.2008L105.857 25.4555L94.7264 36.346L97.1363 37.4193L99.3831 35.1006L99.384 35.1015ZM104.839 35.1908L100.969 33.466L105.263 29.0353L104.839 35.1908Z" fill="#7E4220"/> <path d="M113.58 47.8843C114.58 48.8219 115.669 49.415 116.848 49.6665C118.027 49.917 119.214 49.8305 120.411 49.4041C121.607 48.9777 122.72 48.2142 123.753 47.1126C124.794 46.002 125.491 44.8376 125.844 43.6213C126.195 42.4049 126.209 41.2159 125.883 40.0561C125.556 38.8962 124.887 37.843 123.877 36.8954C122.888 35.967 121.806 35.3803 120.632 35.1352C119.458 34.8883 118.272 34.983 117.078 35.4194C115.882 35.8549 114.768 36.6239 113.736 37.7245C112.714 38.8161 112.023 39.9732 111.666 41.1941C111.309 42.4149 111.291 43.6039 111.613 44.7592C111.935 45.9145 112.59 46.9568 113.581 47.8843H113.58ZM113.962 41.7662C114.234 40.949 114.74 40.1463 115.478 39.3582C116.226 38.5609 117.001 38.0015 117.804 37.6808C118.607 37.361 119.395 37.2745 120.169 37.4202C120.943 37.5669 121.658 37.9478 122.315 38.5637C122.992 39.1978 123.426 39.8994 123.617 40.6665C123.808 41.4337 123.77 42.2291 123.503 43.0509C123.235 43.8718 122.733 44.6781 121.994 45.4653C121.265 46.2434 120.499 46.7919 119.696 47.1126C118.894 47.4324 118.103 47.5217 117.325 47.3805C116.546 47.2393 115.818 46.8511 115.142 46.217C114.486 45.6011 114.056 44.9096 113.855 44.1424C113.655 43.3753 113.689 42.5826 113.962 41.7662Z" fill="#7E4220"/> <path d="M122.2 57.9986L126.605 55.7372L129.466 56.6319L125.206 63.857L126.495 66.3699L131.833 57.3717L139.357 59.7224L137.887 56.8588L129.318 54.345L135.08 51.3885L133.98 49.2446L121.099 55.8547L122.2 57.9986Z" fill="#7E4220"/> <path d="M141.387 67.285L127.263 70.463L127.791 72.8132L141.916 69.6353L141.387 67.285Z" fill="#7E4220"/> <path d="M45.4598 111.18L42.7848 108.001L31.7075 117.325L34.3698 120.486C35.9387 122.35 37.6097 123.384 39.3809 123.586C41.1521 123.787 42.9169 123.148 44.6763 121.667C46.4666 120.16 47.4287 118.491 47.5618 116.66C47.6939 114.829 46.9941 113.002 45.4607 111.18H45.4598ZM45.0608 117.367C44.7565 118.156 44.1287 118.952 43.1748 119.755C42.2208 120.557 41.3298 121.036 40.5007 121.191C39.6715 121.345 38.8798 121.216 38.1245 120.801C37.3692 120.388 36.6303 119.752 35.9077 118.893L34.9447 117.748L42.6518 111.261L43.7488 112.564C44.4348 113.38 44.9013 114.187 45.1473 114.984C45.3933 115.781 45.3642 116.575 45.0608 117.366V117.367Z" fill="#7E4220"/> <path d="M46.0895 131.869L54.2603 136.94L55.3892 135.122L49.2647 131.322L51.4778 127.757L57.1249 131.262L58.2637 129.425L52.6167 125.921L54.643 122.656L60.7675 126.457L61.8954 124.638L53.7237 119.567L46.0895 131.869Z" fill="#7E4220"/> <path d="M67.9679 129.578C68.2021 129.369 68.4854 129.233 68.8171 129.169C69.1487 129.106 69.4949 129.124 69.8567 129.219C70.3651 129.354 70.7842 129.612 71.1131 129.993C71.442 130.374 71.6798 130.856 71.8265 131.438L73.9712 130.803C73.7662 129.846 73.3644 129.066 72.7649 128.464C72.1654 127.861 71.4037 127.437 70.4799 127.193C69.6234 126.966 68.8235 126.926 68.0827 127.074C67.342 127.221 66.7151 127.532 66.204 128.005C65.6911 128.478 65.3385 129.083 65.1435 129.819C64.9549 130.528 64.9467 131.181 65.118 131.779C65.2893 132.375 65.62 132.939 66.1093 133.47C66.5994 134.001 67.2235 134.538 67.9816 135.083C68.5337 135.487 68.9938 135.856 69.3637 136.19C69.7337 136.525 69.9961 136.86 70.1509 137.194C70.3058 137.529 70.3286 137.904 70.2184 138.318C70.1163 138.708 69.9195 139.027 69.6307 139.28C69.341 139.533 68.9947 139.695 68.5893 139.766C68.1839 139.838 67.7529 139.814 67.2973 139.693C66.481 139.477 65.8551 139.067 65.4195 138.466C64.9849 137.864 64.81 137.101 64.8966 136.179L62.4785 136.141C62.3564 137.469 62.6589 138.637 63.3869 139.647C64.1157 140.656 65.2155 141.356 66.6887 141.746C67.6263 141.995 68.5009 142.029 69.3145 141.851C70.1282 141.672 70.8197 141.322 71.3873 140.799C71.9549 140.276 72.3476 139.607 72.5636 138.79C72.7585 138.053 72.7667 137.386 72.5891 136.787C72.4114 136.189 72.077 135.624 71.5878 135.093C71.0976 134.563 70.4735 134.025 69.7154 133.481C69.1269 133.053 68.6503 132.677 68.2859 132.351C67.9205 132.025 67.6727 131.705 67.5406 131.39C67.4094 131.075 67.3894 130.745 67.4814 130.396C67.5698 130.062 67.731 129.79 67.967 129.579L67.9679 129.578Z" fill="#7E4220"/> <path d="M79.988 128.957L79.6418 143.43L82.051 143.488L82.3972 129.014L79.988 128.957Z" fill="#7E4220"/> <path d="M95.8963 133.984L96.4083 136.062L99.8614 135.211C99.9398 135.754 99.9416 136.243 99.8642 136.675C99.753 137.294 99.5343 137.808 99.2072 138.217C98.8792 138.626 98.4966 138.952 98.0574 139.196C97.6183 139.439 97.17 139.618 96.7126 139.731C95.8389 139.946 95.028 139.925 94.28 139.667C93.5319 139.41 92.885 138.944 92.342 138.273C91.7981 137.601 91.3972 136.741 91.1384 135.692C90.8797 134.643 90.836 133.699 91.0063 132.857C91.1776 132.016 91.5339 131.308 92.0769 130.733C92.6199 130.158 93.3279 129.761 94.2016 129.545C95.1555 129.31 96.0275 129.345 96.8156 129.65C97.6037 129.955 98.2642 130.491 98.7954 131.258L100.779 129.935C99.9899 128.761 98.9722 127.942 97.724 127.479C96.4757 127.016 95.1191 126.966 93.654 127.327C92.3366 127.651 91.2551 128.24 90.4086 129.09C89.5631 129.94 88.9964 130.982 88.7085 132.214C88.4206 133.449 88.4571 134.797 88.8179 136.263C89.1796 137.728 89.7709 138.944 90.5945 139.911C91.4173 140.879 92.394 141.543 93.5256 141.906C94.6562 142.269 95.8525 142.295 97.1172 141.984C97.7495 141.828 98.3226 141.594 98.8373 141.281C99.3521 140.97 99.7776 140.583 100.114 140.122C100.335 139.819 100.508 139.485 100.637 139.121L101.242 140.667L103.299 140.16L101.439 132.618L95.8935 133.985L95.8963 133.984Z" fill="#7E4220"/> <path d="M111.183 119.243L116.961 127.845L105.889 122.8L103.82 124.19L111.894 136.207L113.893 134.864L108.09 126.225L119.152 131.331L121.256 129.918L113.183 117.901L111.183 119.243Z" fill="#7E4220"/> <path d="M130.727 113.268C130.128 112.798 129.517 112.529 128.897 112.456C128.277 112.384 127.626 112.468 126.945 112.71C126.265 112.951 125.525 113.313 124.725 113.796C124.1 114.17 123.565 114.459 123.122 114.666C122.679 114.874 122.288 114.976 121.947 114.973C121.606 114.97 121.293 114.858 121.01 114.637C120.738 114.424 120.55 114.168 120.45 113.87C120.35 113.572 120.335 113.257 120.409 112.928C120.482 112.598 120.634 112.286 120.864 111.991C121.188 111.577 121.591 111.293 122.069 111.141C122.548 110.989 123.086 110.96 123.679 111.054L123.939 108.833C122.979 108.645 122.104 108.708 121.314 109.022C120.524 109.336 119.835 109.869 119.246 110.622C118.7 111.32 118.349 112.039 118.193 112.778C118.037 113.517 118.076 114.215 118.309 114.872C118.542 115.529 118.959 116.092 119.559 116.561C120.137 117.013 120.734 117.277 121.35 117.355C121.967 117.432 122.615 117.351 123.296 117.109C123.977 116.867 124.717 116.506 125.516 116.023C126.104 115.675 126.624 115.396 127.077 115.188C127.53 114.98 127.941 114.87 128.31 114.859C128.678 114.848 129.032 114.975 129.37 115.24C129.687 115.488 129.904 115.793 130.023 116.158C130.141 116.525 130.154 116.907 130.06 117.308C129.967 117.71 129.775 118.095 129.485 118.466C128.964 119.132 128.342 119.546 127.618 119.709C126.893 119.872 126.123 119.732 125.309 119.289L124.321 121.497C125.495 122.132 126.688 122.314 127.903 122.042C129.117 121.769 130.193 121.033 131.132 119.833C131.728 119.069 132.105 118.279 132.261 117.46C132.417 116.641 132.368 115.869 132.11 115.141C131.853 114.412 131.392 113.788 130.726 113.268L130.727 113.268Z" fill="#7E4220"/> <path d="M60.5224 64.1823C60.3994 64.1823 60.2809 64.2033 60.1589 64.2078C53.3346 64.4812 47.8397 72.3468 47.8397 82C47.8397 84.7151 48.2871 87.2808 49.0633 89.5859C51.0969 95.622 55.4612 99.8177 60.5215 99.8177C67.5143 99.8177 73.2032 91.8245 73.2032 82C73.2032 72.1755 67.5143 64.1823 60.5215 64.1823H60.5224ZM60.5224 96.2644C57.4146 96.2644 54.6111 93.6859 52.9547 89.8529C58.2965 88.816 62.4239 82.1075 62.4239 73.9667C62.4239 71.7992 62.1278 69.7346 61.5984 67.8486C66.0619 68.7114 69.6517 74.835 69.6517 81.9991C69.6517 89.7308 65.4715 96.2634 60.5233 96.2634L60.5224 96.2644Z" fill="#7E4220"/> <path d="M103.537 64.1823C103.414 64.1823 103.295 64.2033 103.173 64.2078C96.3492 64.4812 90.8542 72.3468 90.8542 82C90.8542 84.7151 91.3016 87.2808 92.0779 89.5859C94.1115 95.622 98.4757 99.8177 103.536 99.8177C110.529 99.8177 116.218 91.8245 116.218 82C116.218 72.1755 110.529 64.1823 103.536 64.1823H103.537ZM103.537 96.2644C100.429 96.2644 97.6256 93.6859 95.9692 89.8529C101.311 88.816 105.438 82.1075 105.438 73.9667C105.438 71.7992 105.142 69.7346 104.613 67.8486C109.076 68.7114 112.666 74.835 112.666 81.9991C112.666 89.7308 108.486 96.2634 103.538 96.2634L103.537 96.2644Z" fill="#7E4220"/> </g> <defs> <clipPath id="clip0_1_490"> <rect width="164" height="164" fill="white"/> </clipPath> </defs> </svg>
+          </div>
+        {% endif %}
+      </div>
+      <div class="image-with-text__text-item grid__item">
+        <div
+          id="ImageWithText--{{ section.id }}"
+          class="image-with-text__content image-with-text__content--{{ section.settings.desktop_content_position }} image-with-text__content--desktop-{{ section.settings.desktop_content_alignment }} image-with-text__content--mobile-{{ section.settings.mobile_content_alignment }} image-with-text__content--{{ section.settings.height }} gradient color-{{ section.settings.color_scheme }} content-container"
+        >
+          {%- for block in section.blocks -%}
+            {% case block.type %}
+              {%- when 'heading' -%}
+                <h2
+                  class="image-with-text__heading inline-richtext {{ block.settings.heading_size }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.heading }}
+                </h2>
+              {%- when 'caption' -%}
+                <p
+                  class="image-with-text__text image-with-text__text--caption {{ block.settings.text_style }} {{ block.settings.text_style }}--{{ block.settings.text_size }} {{ block.settings.text_style }}"
+                  {{ block.shopify_attributes }}
+                >
+                  {{ block.settings.caption | escape }}
+                </p>
+              {%- when 'text' -%}
+                <div class="image-with-text__text rte {{ block.settings.text_style }}" {{ block.shopify_attributes }}>
+                  {{ block.settings.text }}
+                </div>
+              {%- when 'button' -%}
+                {%- if block.settings.button_label != blank -%}
+                  <a
+                    {% if block.settings.button_link == blank %}
+                      role="link" aria-disabled="true"
+                    {% else %}
+                      href="{{ block.settings.button_link }}"
+                    {% endif %}
+                    class="button{% if block.settings.button_style_secondary %} button--secondary{% else %} button--primary{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    {{ block.settings.button_label | escape }}
+                  </a>
+                {%- endif -%}
+            {%- endcase -%}
+          {%- endfor -%}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "t:sections.image-with-text.name",
+  "class": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "class",
+      "label": "Class"
+    },
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "t:sections.image-with-text.settings.image.label"
+    },
+    {
+      "type": "select",
+      "id": "height",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "t:sections.image-with-text.settings.height.options__1.label"
+        },
+        {
+          "value": "small",
+          "label": "t:sections.image-with-text.settings.height.options__2.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.image-with-text.settings.height.options__3.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.image-with-text.settings.height.options__4.label"
+        }
+      ],
+      "default": "adapt",
+      "label": "t:sections.image-with-text.settings.height.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_image_width",
+      "options": [
+        {
+          "value": "small",
+          "label": "t:sections.image-with-text.settings.desktop_image_width.options__1.label"
+        },
+        {
+          "value": "medium",
+          "label": "t:sections.image-with-text.settings.desktop_image_width.options__2.label"
+        },
+        {
+          "value": "large",
+          "label": "t:sections.image-with-text.settings.desktop_image_width.options__3.label"
+        }
+      ],
+      "default": "medium",
+      "label": "t:sections.image-with-text.settings.desktop_image_width.label",
+      "info": "t:sections.image-with-text.settings.desktop_image_width.info"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "options": [
+        {
+          "value": "image_first",
+          "label": "t:sections.image-with-text.settings.layout.options__1.label"
+        },
+        {
+          "value": "text_first",
+          "label": "t:sections.image-with-text.settings.layout.options__2.label"
+        }
+      ],
+      "default": "image_first",
+      "label": "t:sections.image-with-text.settings.layout.label",
+      "info": "t:sections.image-with-text.settings.layout.info"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_position",
+      "options": [
+        {
+          "value": "top",
+          "label": "t:sections.image-with-text.settings.desktop_content_position.options__1.label"
+        },
+        {
+          "value": "middle",
+          "label": "t:sections.image-with-text.settings.desktop_content_position.options__2.label"
+        },
+        {
+          "value": "bottom",
+          "label": "t:sections.image-with-text.settings.desktop_content_position.options__3.label"
+        }
+      ],
+      "default": "top",
+      "label": "t:sections.image-with-text.settings.desktop_content_position.label"
+    },
+    {
+      "type": "select",
+      "id": "desktop_content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.image-with-text.settings.desktop_content_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.image-with-text.settings.desktop_content_alignment.label"
+    },
+    {
+      "type": "select",
+      "id": "content_layout",
+      "options": [
+        {
+          "value": "no-overlap",
+          "label": "t:sections.image-with-text.settings.content_layout.options__1.label"
+        },
+        {
+          "value": "overlap",
+          "label": "t:sections.image-with-text.settings.content_layout.options__2.label"
+        }
+      ],
+      "default": "no-overlap",
+      "label": "t:sections.image-with-text.settings.content_layout.label"
+    },
+    {
+      "type": "color_scheme",
+      "id": "color_scheme",
+      "label": "t:sections.all.colors.label",
+      "default": "background-1"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.animation.content"
+    },
+    {
+      "type": "select",
+      "id": "image_behavior",
+      "options": [
+        {
+          "value": "none",
+          "label": "t:sections.all.animation.image_behavior.options__1.label"
+        },
+        {
+          "value": "ambient",
+          "label": "t:sections.all.animation.image_behavior.options__2.label"
+        },
+        {
+          "value": "zoom-in",
+          "label": "t:sections.all.animation.image_behavior.options__4.label"
+        }
+      ],
+      "default": "none",
+      "label": "t:sections.all.animation.image_behavior.label"
+    },
+    {
+      "type": "header",
+      "content": "Mobile layout"
+    },
+    {
+      "type": "select",
+      "id": "mobile_content_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__1.label"
+        },
+        {
+          "value": "center",
+          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__2.label"
+        },
+        {
+          "value": "right",
+          "label": "t:sections.image-with-text.settings.mobile_content_alignment.options__3.label"
+        }
+      ],
+      "default": "left",
+      "label": "t:sections.image-with-text.settings.mobile_content_alignment.label"
+    },
+    {
+      "type": "header",
+      "content": "t:sections.all.padding.section_padding_heading"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "t:sections.all.padding.padding_bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "heading",
+      "name": "t:sections.image-with-text.blocks.heading.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "inline_richtext",
+          "id": "heading",
+          "default": "Image with text",
+          "label": "t:sections.image-with-text.blocks.heading.settings.heading.label"
+        },
+        {
+          "type": "select",
+          "id": "heading_size",
+          "options": [
+            {
+              "value": "h2",
+              "label": "t:sections.all.heading_size.options__1.label"
+            },
+            {
+              "value": "h1",
+              "label": "t:sections.all.heading_size.options__2.label"
+            },
+            {
+              "value": "h0",
+              "label": "t:sections.all.heading_size.options__3.label"
+            }
+          ],
+          "default": "h1",
+          "label": "t:sections.all.heading_size.label"
+        }
+      ]
+    },
+    {
+      "type": "caption",
+      "name": "t:sections.image-with-text.blocks.caption.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "caption",
+          "default": "Add a tagline",
+          "label": "t:sections.image-with-text.blocks.caption.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "subtitle",
+              "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__1.label"
+            },
+            {
+              "value": "caption-with-letter-spacing",
+              "label": "t:sections.image-with-text.blocks.caption.settings.text_style.options__2.label"
+            }
+          ],
+          "default": "caption-with-letter-spacing",
+          "label": "t:sections.image-with-text.blocks.caption.settings.text_style.label"
+        },
+        {
+          "type": "select",
+          "id": "text_size",
+          "options": [
+            {
+              "value": "small",
+              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__1.label"
+            },
+            {
+              "value": "medium",
+              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__2.label"
+            },
+            {
+              "value": "large",
+              "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.options__3.label"
+            }
+          ],
+          "default": "medium",
+          "label": "t:sections.image-with-text.blocks.caption.settings.caption_size.label"
+        }
+      ]
+    },
+    {
+      "type": "text",
+      "name": "t:sections.image-with-text.blocks.text.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "richtext",
+          "id": "text",
+          "default": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.</p>",
+          "label": "t:sections.image-with-text.blocks.text.settings.text.label"
+        },
+        {
+          "type": "select",
+          "id": "text_style",
+          "options": [
+            {
+              "value": "body",
+              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__1.label"
+            },
+            {
+              "value": "subtitle",
+              "label": "t:sections.image-with-text.blocks.text.settings.text_style.options__2.label"
+            }
+          ],
+          "default": "body",
+          "label": "t:sections.image-with-text.blocks.text.settings.text_style.label"
+        }
+      ]
+    },
+    {
+      "type": "button",
+      "name": "t:sections.image-with-text.blocks.button.name",
+      "limit": 1,
+      "settings": [
+        {
+          "type": "text",
+          "id": "button_label",
+          "default": "Button label",
+          "label": "t:sections.image-with-text.blocks.button.settings.button_label.label",
+          "info": "t:sections.image-with-text.blocks.button.settings.button_label.info"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "t:sections.image-with-text.blocks.button.settings.button_link.label"
+        },
+        {
+          "type": "checkbox",
+          "id": "button_style_secondary",
+          "default": false,
+          "label": "t:sections.image-with-text.blocks.button.settings.outline_button.label"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "t:sections.image-with-text.presets.name",
+      "blocks": [
+        {
+          "type": "heading"
+        },
+        {
+          "type": "text"
+        },
+        {
+          "type": "button"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
