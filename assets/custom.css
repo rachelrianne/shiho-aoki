@@ -222,7 +222,7 @@ form select {
 .multicolumn-card__info.no-content {
   display: none;
 }
-button,
+.button,
 a.button {
   font-size: 32px !important;
   padding: 2rem !important;
