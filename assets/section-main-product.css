@@ -344,6 +344,10 @@ a.product__text {
   margin-bottom: 1.5rem;
 }
 
+.product__title h1 {
+  font-size: 75px;
+}
+
 .product__title > * {
   margin: 0;
 }
