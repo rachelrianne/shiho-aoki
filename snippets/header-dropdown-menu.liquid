@@ -5,7 +5,14 @@
   {% render 'header-dropdown-menu' %}
 {% endcomment %}
 
-<nav class="header__inline-menu {{ side }}">
+{% liquid
+  if side contains "top-left-menu" 
+    assign menu_class = "top-left-menu"
+  elsif side contains "top-right-menu" 
+    assign menu_class = "top-right-menu"
+  endif
+%}
+<nav class="header__inline-menu {{ menu_class }}">
   <ul class="list-menu list-menu--inline" role="list">
     {%- for link in linklists[side].links -%}
       <li>
@@ -106,12 +113,12 @@
               <img src="https://cdn.shopify.com/s/files/1/0834/8034/6932/files/Ellipse.svg" />
             </div>
           {% endif %}
-          {% if forloop.index == 1 and side == "top-right-menu" %}
+          {% if forloop.index == 1 and side == "top-right-menu-241101" %}
             <div class="shape zig">
               <img src="https://cdn.shopify.com/s/files/1/0834/8034/6932/files/zig-zag.svg" />
             </div>
           {% endif %}
-          {% if forloop.index == 2 and side == "top-right-menu" %}
+          {% if forloop.index == 2 and side == "top-right-menu-241101" %}
             <div class="shape bubbles">
               <img src="https://cdn.shopify.com/s/files/1/0834/8034/6932/files/bubbles.svg" />
             </div>
