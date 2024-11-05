@@ -275,47 +275,47 @@ form .field {
 .contact__fields {
   grid-template-columns: unset !important;
 }
-form .form-field {
+.template-index form .form-field {
   display: flex;
   align-items: baseline;
   margin-bottom: 1.2rem;
 }
-form .form-field span {
+.template-index form .form-field span {
   font-size: 32px;
   width: 30%;
 }
 .contact__button {
   text-align: right;
 }
-form input,
-form textarea {
+.template-index form input,
+.template-index form textarea {
   border-bottom: 3px solid !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
   box-shadow: none !important;
 }
-form label {
+.template-index form label {
   left: 0;
 }
-form textarea {
+.template-index form textarea {
   padding-top: 0 !important;
   height: auto !important;
 }
-form input {
+.template-index form input {
   padding-bottom: 1.5rem !important;
   padding-top: 0rem!important;
 }
-form input,
-form textarea,
-form input::placeholder,
-form textarea::placeholder {
+.template-index form input,
+.template-index form textarea,
+.template-index form input::placeholder,
+.template-index form textarea::placeholder {
   color: #7e4220 !important;
   font-family: GT Walsheim !important;
   font-size: 32px !important;
   font-weight: 300 !important;
 }
-form input::placeholder,
-form textarea::placeholder {
+.template-index form input::placeholder,
+.template-index form textarea::placeholder {
   opacity: 0.5 !important;
 }
 .footer__copyright {
