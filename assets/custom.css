@@ -225,9 +225,15 @@ form select {
 button,
 a.button {
   font-size: 32px !important;
+  padding: 2rem !important;
+  opacity: 1 !important;
+}
+button.button--primary,
+button.button--secondary,
+a.button--primary,
+a.button--secondary {
   min-width: 30.5rem !important;
   min-height: 10rem !important;
-  opacity: 1 !important;
 }
 button:after,
 a.button:after,
