@@ -122,7 +122,7 @@ nav .list-menu a {
   column-gap: 9rem;
 }
 header.header {
-  max-width: 136rem;
+  max-width: min(136rem, 90%);
   margin: auto;
 }
 .list-menu > li {
@@ -465,6 +465,12 @@ footer .list-social__item .icon {
 .quantity__input {
   margin-top: 3px;
   margin-bottom: 3px;
+}
+@media screen and (max-width: 1400px) {
+  .top-left-menu .list-menu--inline, 
+  .top-right-menu .list-menu--inline {
+    column-gap: 3rem;
+  }
 }
 @media screen and (max-width: 1259px) {
   .header {
