@@ -356,7 +356,7 @@ footer .list-social__item .icon {
   margin-left: auto;
   margin-right: auto;
 }
-.field .accordion {
+.template-index form .field .accordion {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
@@ -370,18 +370,18 @@ footer .list-social__item .icon {
   transition: 0.4s;
   padding-right: 1rem;
 }
-.field .accordion span:first-of-type {
+.template-index form .field .accordion span:first-of-type {
   opacity: 0.5;
 }
-.field .accordion span:last-of-type {
+.template-index form .field .accordion span:last-of-type {
   width: auto;
   display: flex;
   margin-top: 1.6rem;
 }
-.field .accordion span:last-of-type svg {
+.template-index form .field .accordion span:last-of-type svg {
   transition: 0.4s;
 }
-.field .accordion.active span:last-of-type svg {
+.template-index form .field .accordion.active span:last-of-type svg {
   transform: rotate(180deg);
 }
 .field .panel {
@@ -578,13 +578,13 @@ footer .list-social__item .icon {
   form .form-field span {
     display: none;
   }
-  .field .accordion span.medium-hide {
+  .template-index form .field .accordion span.medium-hide {
     display: block !important;
     width: auto;
     opacity: 0.5;
     line-height: 30px;
   }
-  .field .accordion span:last-of-type {
+  .template-index form .field .accordion span:last-of-type {
     margin-top: 1rem;
   }
   form .form-field {
@@ -684,7 +684,7 @@ footer .list-social__item .icon {
   form textarea::placeholder {
     font-weight: 400 !important;
   }
-  .field .accordion span.medium-hide {
+  .template-index form .field .accordion span.medium-hide {
     font-size: 20px;
     font-weight: 400;
     color: #7E4220;
@@ -719,14 +719,14 @@ footer .list-social__item .icon {
     padding: 0;
     font-size: 20px;
   }
-  .field .accordion {
+  .template-index form .field .accordion {
     align-items: center;
   }
   form .form-field span.title-container {
     display: block;
     width: 90%;
   }
-  .field .accordion .selected-budget {
+  .template-index form .field .accordion .selected-budget {
     display: block;
     font-size: 20px;
     line-height: 30px;
