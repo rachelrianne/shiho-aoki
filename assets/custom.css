@@ -96,6 +96,10 @@ html {
 .header__inline-menu.top-right-menu {
   text-align: right;
 }
+.header__icons {
+  position: absolute;
+  left: calc(100% + 30px);
+}
 nav .list-menu a {
   font-family: "HK Grotesk";
   font-size: 25px;
@@ -452,17 +456,28 @@ footer .list-social__item .icon {
 .field .accordion:not(.active) .selected-budget:not(:empty) ~ .medium-hide {
   display: none !important;
 }
+.quantity {
+  min-height: calc((var(--inputs-border-width) * 2) + 7rem);
+}
+.quantity::before {
+  border: 3px solid;
+}
+.quantity__input {
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
 @media screen and (max-width: 1259px) {
   .header {
-    grid-template-areas: "heading left-icons";
-    grid-template-columns: 3fr 1fr;
     padding: 11px .8rem 12px 1.8rem!important;
   }
   .header > .header__search {
     display: none;
   }
   header-drawer {
-    justify-self: end !important;
+    justify-self: start;
+  }
+  .header__heading {
+    padding-top: 0.5rem;
   }
   .header__heading-link {
     padding: 0;
@@ -470,11 +485,16 @@ footer .list-social__item .icon {
   .header__heading-logo {
     max-width: 27rem;
   }
+  .header__icons {
+    position: static;
+    left: auto;
+  }
   .header__icon--menu .icon-close {
     width: 1.6rem;
   }
-  .header__heading {
-    justify-self: start;
+  .header__icon .icon.icon-cart-shiho {
+    height: 2.8rem;
+    width: 2.8rem;
   }
   .banner__media.has-mobile {
     position: relative;
@@ -484,6 +504,9 @@ footer .list-social__item .icon {
   }
   .banner__media.has-mobile:before {
     padding: 0 !important;
+  }
+  .menu-drawer {
+    transform: translate(-100%);
   }
   .menu-drawer__menu {
     display: flex;
@@ -512,6 +535,9 @@ footer .list-social__item .icon {
     transform: rotate(15.05deg);
     top: 10.5rem;
     right: 1.5rem;
+  }
+  .product__title h1 {
+    font-size: 35px;
   }
 }
 @media screen and (min-width: 750px) {

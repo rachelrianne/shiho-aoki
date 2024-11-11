@@ -2539,9 +2539,6 @@ product-info .loading-overlay:not(.hidden) ~ *,
   grid-area: icons;
   justify-self: end;
   padding-right: 0.8rem;
-
-  position: absolute;
-  left: calc(100% + 30px);
 }
 
 .header__icons .shopify-app-block {
