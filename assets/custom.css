@@ -446,14 +446,14 @@ footer .list-social__item .icon {
   outline: none !important;
   box-shadow:  none !important;
 }
-.field .accordion .selected-budget {
+.template-index form .field .accordion .selected-budget {
   width: 100%;
   display: none;
   opacity: 1 !important;
   color: #FFCBDD;
 }
-.field .accordion:not(.active) .selected-budget:not(:empty) ~ .small-hide,
-.field .accordion:not(.active) .selected-budget:not(:empty) ~ .medium-hide {
+.template-index form .field .accordion:not(.active) .selected-budget:not(:empty) ~ .small-hide,
+.template-index form .field .accordion:not(.active) .selected-budget:not(:empty) ~ .medium-hide {
   display: none !important;
 }
 .quantity {
@@ -556,6 +556,7 @@ footer .list-social__item .icon {
   a.button:hover { 
     color: #7E4220;
     background-color: #FFCBDD;
+    border-color: #FFCBDD;
   }
 }
 @media screen and (max-width: 1200px) {
